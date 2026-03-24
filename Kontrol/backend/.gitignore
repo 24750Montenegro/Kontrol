@@ -1,0 +1,23 @@
+# Binarios
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+/server
+/main
+
+# Testing
+*.test
+*.out
+coverage.txt
+
+# Entorno
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Tmp
+tmp/
