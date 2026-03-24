@@ -1,0 +1,73 @@
+services:
+  # BASE DE DATOS (PostgreSQL)
+  db:
+    image: postgres:16-alpine
+    container_name: kontrol_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret123}
+      POSTGRES_DB: ${DB_NAME:-proyecto_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Script de inicialización (crear tablas, datos seed, etc.)
+      - ./Kontrol/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-admin} -d ${DB_NAME:-proyecto_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  #BACKEND (Go + Gin)
+  backend:
+    build:
+      context: ./Kontrol/backend
+      dockerfile: Dockerfile
+    container_name: proyecto_backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-admin}
+      DB_PASSWORD: ${DB_PASSWORD:-secret123}
+      DB_NAME: ${DB_NAME:-proyecto_db}
+      DB_SSLMODE: disable
+      GIN_MODE: debug
+      PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+#FRONTEND (Vue.js)
+  frontend:
+    build:
+      context: ./Kontrol/frontend
+      dockerfile: Dockerfile
+    container_name: proyecto_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+#VOLÚMENES PERSISTENTES
+volumes:
+  pgdata:
+    driver: local
+
+#REDES
+networks:
+  app-network:
+    driver: bridge
