@@ -35,8 +35,6 @@ export default defineConfig({
         'tests/**',
         // Arranque del proceso: `app.listen`, sin lógica que probar.
         'src/index.js',
-        // Configuración del SDK de UploadThing.
-        'src/uploadthing.js',
         // Pool de Postgres, conexión de Mongo, DDL de arranque y los scripts
         // de `npm run seed:test` / `reset:test`.
         'src/db/**',

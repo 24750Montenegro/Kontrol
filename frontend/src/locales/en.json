@@ -1770,7 +1770,7 @@
       "deleteWhat": "Deletion is immediate and has no grace period. Your account is disabled, login credentials and contact details are removed, your personal AI conversations and chat messages are deleted. Anonymized technical references needed by business records remain; operational logs may still contain identifiable data.",
       "deleteRetained": "Shared sales, expenses, projects, and other company records are not deleted. If you are the owner, ownership passes to an available active administrator or member; if no one remains, the company is closed: its data can be downloaded for 30 days and is deleted within 60. Other accounts are not deleted.",
       "deleteDuration": "For a company that is still in use, the current policy does not set a retention period for these records, so we cannot promise a deletion date while it stays active. To delete them, the owner can close the company. This does not claim that a law requires their retention.",
-      "deleteExternal": "This operation does not delete data already sent to Google, email/SMS providers, the AI service, UploadThing, or other integrations. There is no account-level deletion workflow for those providers; they may retain their own copies under periods that have not been verified. Business files are deleted only when the company is closed.",
+      "deleteExternal": "This operation does not delete data already sent to Google, email/SMS providers, the AI service, Cloudinary, or other integrations. There is no account-level deletion workflow for those providers; they may retain their own copies under periods that have not been verified. Business files are deleted only when the company is closed.",
       "password": "Current password (for password-based accounts)",
       "googleReauth": "Reauthenticate with Google",
       "reauthenticating": "Connecting to Google…",
@@ -2609,7 +2609,7 @@
         },
         {
           "title": "5. Who we share information with",
-          "body": "With members of your company according to their permissions, and with providers that help us operate: database and hosting services, UploadThing for attachments, and Google if you choose to sign in with Google. If your business connects Slack, Microsoft Teams, Telegram, SMS, email or webhooks, alerts are sent to those destinations according to your configuration. Some of these providers may process data outside Guatemala."
+          "body": "With members of your company according to their permissions, and with providers that help us operate: database and hosting services, Cloudinary for attachments, and Google if you choose to sign in with Google. If your business connects Slack, Microsoft Teams, Telegram, SMS, email or webhooks, alerts are sent to those destinations according to your configuration. Some of these providers may process data outside Guatemala."
         },
         {
           "title": "6. How long we keep it",
@@ -2657,7 +2657,7 @@
         },
         {
           "title": "5. External services",
-          "body": "To display the interface, your browser downloads fonts from Google Fonts and the Google logo from Icons8. If you sign in with Google or attach files, it also connects to Google or UploadThing. Those services receive your IP address and technical request data; Kontrol does not store anything in your browser on their behalf."
+          "body": "To display the interface, your browser downloads fonts from Google Fonts and the Google logo from Icons8. If you sign in with Google or attach files, it also connects to Google or Cloudinary. Those services receive your IP address and technical request data; Kontrol does not store anything in your browser on their behalf."
         },
         {
           "title": "6. How to change your choice or delete everything",

@@ -1,8 +1,8 @@
-import { apiFetch as requestApi, authHeaders, getApiBaseUrl } from '@/services/api.js'
+import { apiFetch as requestApi, getApiBaseUrl } from '@/services/api.js'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { io } from 'socket.io-client'
-import { genUploader } from 'uploadthing/client'
+import { toChatAttachment, uploadFiles as uploadToStorage } from '@/services/fileUpload.js'
 import { useAuthStore } from './auth.js'
 import {
   getMessagePreview,
@@ -12,18 +12,12 @@ import {
 } from '../utils/chat.js'
 import { logger } from '../utils/logger.js'
 
-const API = getApiBaseUrl()
-
 function resolveSocketUrl() {
   const explicit = import.meta.env.VITE_SOCKET_URL
   return explicit || getApiBaseUrl()
 }
 
 const SOCKET_URL = resolveSocketUrl()
-
-const uploadthing = genUploader({
-  url: `${API}/api/uploadthing`,
-})
 
 function resolveRtcConfiguration() {
   const fallbackIceServers = [{ urls: ['stun:stun.l.google.com:19302'] }]
@@ -918,13 +912,10 @@ export const useChatStore = defineStore('chat', () => {
     }
 
     try {
-      const uploaded = await uploadthing.uploadFiles('chatAttachment', {
-        files,
-        headers: () => authHeaders({}, { token: authStore.token }),
-      })
+      const uploaded = await uploadToStorage(files, { purpose: 'chat', token: authStore.token })
 
       const attachments = uploaded
-        .map((item) => normalizeAttachment(item?.serverData))
+        .map((item) => normalizeAttachment(toChatAttachment(item)))
         .filter(Boolean)
 
       if (!attachments.length) {
@@ -934,7 +925,7 @@ export const useChatStore = defineStore('chat', () => {
       lastError.value = ''
       return { success: true, data: attachments }
     } catch (error) {
-      logger.error('UploadThing upload error:', error)
+      logger.error('Attachment upload error:', error)
       const message = error?.message || 'Upload failed.'
       lastError.value = message
       return { success: false, message }

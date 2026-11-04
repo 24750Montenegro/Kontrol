@@ -2,7 +2,7 @@
 
 > Generado por `scripts/licenses-report.mjs` a partir de los SBOM de esta carpeta. No se edita a mano: `npm run licenses` lo regenera.
 
-Herramienta: npm 10.8.2, cyclonedx-library 10.3.0, cyclonedx-npm 6.0.1. Especificación CycloneDX 1.6, construida desde `package-lock.json` (`--package-lock-only`), así que incluye los binarios opcionales de todas las plataformas aunque no estén instalados.
+Herramienta: npm 11.19.1, cyclonedx-library 10.4.0, cyclonedx-npm 6.0.1. Especificación CycloneDX 1.6, construida desde `package-lock.json` (`--package-lock-only`), así que incluye los binarios opcionales de todas las plataformas aunque no estén instalados.
 
 - [`sbom.cdx.json`](sbom.cdx.json): árbol completo, producción y desarrollo.
 - [`sbom-produccion.cdx.json`](sbom-produccion.cdx.json): mismo árbol con `--omit dev`. Un paquete es de **producción** si aparece aquí; si no, es solo de **desarrollo**.
@@ -12,7 +12,7 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 
 ## Resumen
 
-539 paquetes de terceros: 244 de producción y 295 de desarrollo; 47 directos y 492 transitivos. No se cuentan los workspaces propios (`@control/frontend`, `@control/backend`).
+516 paquetes de terceros: 222 de producción y 294 de desarrollo; 47 directos y 469 transitivos. No se cuentan los workspaces propios (`@control/frontend`, `@control/backend`).
 
 | Categoría | Producción | Desarrollo | Total |
 | --- | --- | --- | --- |
@@ -21,7 +21,7 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | Licencia propia | 1 | 0 | 1 |
 | Sin declarar | 0 | 0 | 0 |
 | Permisiva por elección | 2 | 0 | 2 |
-| Permisiva | 241 | 283 | 524 |
+| Permisiva | 219 | 282 | 501 |
 
 ## Producción
 
@@ -31,23 +31,14 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `@babel/helper-validator-identifier` | 7.29.7 | Transitiva | MIT | Permisiva |
 | `@babel/parser` | 7.29.9 | Transitiva | MIT | Permisiva |
 | `@babel/types` | 7.29.8 | Transitiva | MIT | Permisiva |
-| `@effect/platform` | 0.90.3 | Transitiva | MIT | Permisiva |
 | `@intlify/core-base` | 11.4.12 | Transitiva | MIT | Permisiva |
 | `@intlify/devtools-types` | 11.4.12 | Transitiva | MIT | Permisiva |
 | `@intlify/message-compiler` | 11.4.12 | Transitiva | MIT | Permisiva |
 | `@intlify/shared` | 11.4.12 | Transitiva | MIT | Permisiva |
 | `@jridgewell/sourcemap-codec` | 1.6.0 | Transitiva | MIT | Permisiva |
 | `@mongodb-js/saslprep` | 1.5.4 | Transitiva | MIT | Permisiva |
-| `@msgpackr-extract/msgpackr-extract-darwin-arm64` | 3.0.4 | Transitiva | MIT | Permisiva |
-| `@msgpackr-extract/msgpackr-extract-darwin-x64` | 3.0.4 | Transitiva | MIT | Permisiva |
-| `@msgpackr-extract/msgpackr-extract-linux-arm` | 3.0.4 | Transitiva | MIT | Permisiva |
-| `@msgpackr-extract/msgpackr-extract-linux-arm64` | 3.0.4 | Transitiva | MIT | Permisiva |
-| `@msgpackr-extract/msgpackr-extract-linux-x64` | 3.0.4 | Transitiva | MIT | Permisiva |
-| `@msgpackr-extract/msgpackr-extract-win32-x64` | 3.0.4 | Transitiva | MIT | Permisiva |
-| `@opentelemetry/semantic-conventions` | 1.43.0 | Transitiva | Apache-2.0 | Permisiva |
 | `@rollup/rollup-linux-x64-gnu` | 4.63.5 | Directa | MIT | Permisiva |
 | `@socket.io/component-emitter` | 3.1.2 | Transitiva | MIT | Permisiva |
-| `@standard-schema/spec` | 1.0.0-beta.4 | Transitiva | MIT | Permisiva |
 | `@standard-schema/spec` | 1.1.0 | Transitiva | MIT | Permisiva |
 | `@types/cors` | 2.8.19 | Transitiva | MIT | Permisiva |
 | `@types/node` | 26.6.2 | Transitiva | MIT | Permisiva |
@@ -56,8 +47,6 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `@types/webidl-conversions` | 7.0.3 | Transitiva | MIT | Permisiva |
 | `@types/whatwg-url` | 13.0.0 | Transitiva | MIT | Permisiva |
 | `@types/ws` | 8.18.1 | Transitiva | MIT | Permisiva |
-| `@uploadthing/mime-types` | 0.3.6 | Transitiva | MIT | Permisiva |
-| `@uploadthing/shared` | 7.1.10 | Transitiva | MIT | Permisiva |
 | `@vue/compiler-core` | 3.5.43 | Transitiva | MIT | Permisiva |
 | `@vue/compiler-dom` | 3.5.43 | Transitiva | MIT | Permisiva |
 | `@vue/compiler-sfc` | 3.5.43 | Transitiva | MIT | Permisiva |
@@ -81,7 +70,7 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `base64id` | 2.0.0 | Transitiva | MIT | Permisiva |
 | `bcrypt` | 6.0.0 | Directa | MIT | Permisiva |
 | `bignumber.js` | 9.3.1 | Transitiva | MIT | Permisiva |
-| `body-parser` | 1.20.8 | Transitiva | MIT | Permisiva |
+| `body-parser` | 1.20.9 | Transitiva | MIT | Permisiva |
 | `bson` | 7.3.3 | Transitiva | Apache-2.0 | Permisiva |
 | `buffer-equal-constant-time` | 1.0.1 | Transitiva | BSD-3-Clause | Permisiva |
 | `bytes` | 3.1.2 | Transitiva | MIT | Permisiva |
@@ -105,13 +94,11 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `debug` | 4.4.3 | Transitiva | MIT | Permisiva |
 | `depd` | 2.0.0 | Transitiva | MIT | Permisiva |
 | `destroy` | 1.2.0 | Transitiva | MIT | Permisiva |
-| `detect-libc` | 2.1.2 | Transitiva | Apache-2.0 | Permisiva |
-| `dompurify` | 3.4.16 | Directa | (MPL-2.0 OR Apache-2.0) → se usa bajo **Apache-2.0** | Permisiva por elección |
+| `dompurify` | 3.4.17 | Directa | (MPL-2.0 OR Apache-2.0) → se usa bajo **Apache-2.0** | Permisiva por elección |
 | `dotenv` | 16.6.1 | Directa | BSD-2-Clause | Permisiva |
 | `dunder-proto` | 1.0.1 | Transitiva | MIT | Permisiva |
 | `ecdsa-sig-formatter` | 1.0.11 | Transitiva | Apache-2.0 | Permisiva |
 | `ee-first` | 1.1.1 | Transitiva | MIT | Permisiva |
-| `effect` | 3.22.3 | Transitiva | MIT | Permisiva |
 | `encodeurl` | 2.0.0 | Transitiva | MIT | Permisiva |
 | `engine.io` | 6.6.11 | Transitiva | MIT | Permisiva |
 | `engine.io-client` | 6.6.6 | Transitiva | MIT | Permisiva |
@@ -126,10 +113,8 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `express` | 4.22.3 | Directa | MIT | Permisiva |
 | `express-rate-limit` | 8.7.0 | Directa | MIT | Permisiva |
 | `extend` | 3.0.2 | Transitiva | MIT | Permisiva |
-| `fast-check` | 3.23.2 | Transitiva | MIT | Permisiva |
 | `fetch-blob` | 3.2.0 | Transitiva | MIT | Permisiva |
 | `finalhandler` | 1.3.2 | Transitiva | MIT | Permisiva |
-| `find-my-way-ts` | 0.1.6 | Transitiva | MIT | Permisiva |
 | `formdata-polyfill` | 4.0.10 | Transitiva | MIT | Permisiva |
 | `forwarded` | 0.2.0 | Transitiva | MIT | Permisiva |
 | `fresh` | 0.5.2 | Transitiva | MIT | Permisiva |
@@ -192,16 +177,12 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `ms` | 2.1.3 | Transitiva | MIT | Permisiva |
 | `ms` | 2.1.3 | Transitiva | MIT | Permisiva |
 | `ms` | 2.1.3 | Transitiva | MIT | Permisiva |
-| `msgpackr` | 1.12.1 | Transitiva | MIT | Permisiva |
-| `msgpackr-extract` | 3.0.4 | Transitiva | MIT | Permisiva |
-| `multipasta` | 0.2.8 | Transitiva | MIT | Permisiva |
 | `nanoid` | 3.3.19 | Transitiva | MIT | Permisiva |
 | `negotiator` | 0.6.3 | Transitiva | MIT | Permisiva |
 | `node-addon-api` | 8.9.2 | Transitiva | MIT | Permisiva |
 | `node-domexception` | 1.0.0 | Transitiva | MIT | Permisiva |
 | `node-fetch` | 3.3.2 | Transitiva | MIT | Permisiva |
 | `node-gyp-build` | 4.8.4 | Transitiva | MIT | Permisiva |
-| `node-gyp-build-optional-packages` | 5.2.2 | Transitiva | MIT | Permisiva |
 | `object-assign` | 4.1.1 | Transitiva | MIT | Permisiva |
 | `object-inspect` | 1.13.4 | Transitiva | MIT | Permisiva |
 | `ogl` | 1.0.11 | Directa | Unlicense | Permisiva |
@@ -225,7 +206,6 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `postgres-interval` | 1.2.0 | Transitiva | MIT | Permisiva |
 | `proxy-addr` | 2.0.8 | Transitiva | MIT | Permisiva |
 | `punycode` | 2.3.1 | Transitiva | MIT | Permisiva |
-| `pure-rand` | 6.1.0 | Transitiva | MIT | Permisiva |
 | `qs` | 6.16.0 | Transitiva | BSD-3-Clause | Permisiva |
 | `range-parser` | 1.2.1 | Transitiva | MIT | Permisiva |
 | `raw-body` | 2.5.3 | Transitiva | MIT | Permisiva |
@@ -247,9 +227,8 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `source-map-js` | 1.2.2 | Transitiva | BSD-3-Clause | Permisiva |
 | `sparse-bitfield` | 3.0.3 | Transitiva | MIT | Permisiva |
 | `split2` | 4.2.0 | Transitiva | ISC | Permisiva |
-| `sqids` | 0.3.0 | Transitiva | MIT | Permisiva |
 | `statuses` | 2.0.2 | Transitiva | MIT | Permisiva |
-| `tailwindcss` | 4.3.3 | Directa | MIT | Permisiva |
+| `stripe` | 23.0.0 | Directa | MIT | Permisiva |
 | `three` | 0.183.2 | Directa | MIT | Permisiva |
 | `toidentifier` | 1.0.1 | Transitiva | MIT | Permisiva |
 | `tr46` | 5.1.1 | Transitiva | MIT | Permisiva |
@@ -257,7 +236,6 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `type-is` | 1.6.18 | Transitiva | MIT | Permisiva |
 | `undici-types` | 8.9.0 | Transitiva | MIT | Permisiva |
 | `unpipe` | 1.0.0 | Transitiva | MIT | Permisiva |
-| `uploadthing` | 7.7.4 | Directa | MIT | Permisiva |
 | `utils-merge` | 1.0.1 | Transitiva | MIT | Permisiva |
 | `vary` | 1.1.2 | Transitiva | MIT | Permisiva |
 | `vue` | 3.5.43 | Directa | MIT | Permisiva |
@@ -270,7 +248,7 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `ws` | 8.21.3 | Transitiva | MIT | Permisiva |
 | `xmlhttprequest-ssl` | 2.1.2 | Transitiva | MIT (verificada a mano) | Permisiva |
 | `xtend` | 4.0.2 | Transitiva | MIT | Permisiva |
-| `zod` | 4.6.5 | Directa | MIT | Permisiva |
+| `zod` | 4.6.7 | Directa | MIT | Permisiva |
 
 ## Desarrollo
 
@@ -421,6 +399,7 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `debug` | 4.4.3 | Transitiva | MIT | Permisiva |
 | `deep-is` | 0.1.4 | Transitiva | MIT | Permisiva |
 | `delayed-stream` | 1.0.0 | Transitiva | MIT | Permisiva |
+| `detect-libc` | 2.1.2 | Transitiva | Apache-2.0 | Permisiva |
 | `dezalgo` | 1.0.4 | Transitiva | ISC | Permisiva |
 | `editorconfig` | 3.0.2 | Transitiva | MIT | Permisiva |
 | `emoji-regex` | 8.0.0 | Transitiva | MIT | Permisiva |
@@ -449,7 +428,6 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `fast-levenshtein` | 2.0.6 | Transitiva | MIT | Permisiva |
 | `fast-safe-stringify` | 2.1.1 | Transitiva | MIT | Permisiva |
 | `fdir` | 6.5.0 | Transitiva | MIT | Permisiva |
-| `fdir` | 6.5.0 | Transitiva | MIT | Permisiva |
 | `file-entry-cache` | 11.1.5 | Transitiva | MIT | Permisiva |
 | `find-up` | 5.0.0 | Transitiva | MIT | Permisiva |
 | `flat-cache` | 6.1.23 | Transitiva | MIT | Permisiva |
@@ -462,7 +440,7 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `glob-parent` | 6.0.2 | Transitiva | ISC | Permisiva |
 | `globals` | 17.13.0 | Directa | MIT | Permisiva |
 | `graceful-fs` | 4.2.11 | Transitiva | ISC | Permisiva |
-| `happy-dom` | 20.14.5 | Directa | MIT | Permisiva |
+| `happy-dom` | 21.0.4 | Directa | MIT | Permisiva |
 | `has-flag` | 4.0.0 | Transitiva | MIT | Permisiva |
 | `has-tostringtag` | 1.0.2 | Transitiva | MIT | Permisiva |
 | `hashery` | 1.5.1 | Transitiva | MIT | Permisiva |
@@ -523,8 +501,6 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `path-scurry` | 2.0.2 | Transitiva | BlueOak-1.0.0 | Permisiva |
 | `pathe` | 2.0.3 | Transitiva | MIT | Permisiva |
 | `picomatch` | 4.0.7 | Transitiva | MIT | Permisiva |
-| `picomatch` | 4.0.7 | Transitiva | MIT | Permisiva |
-| `picomatch` | 4.0.7 | Transitiva | MIT | Permisiva |
 | `postcss-selector-parser` | 7.1.6 | Transitiva | MIT | Permisiva |
 | `prelude-ls` | 1.2.1 | Transitiva | MIT | Permisiva |
 | `prettier` | 3.9.10 | Directa | MIT | Permisiva |
@@ -546,6 +522,7 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `supports-color` | 7.2.0 | Transitiva | MIT | Permisiva |
 | `supports-color` | 7.2.0 | Transitiva | MIT | Permisiva |
 | `supports-color` | 8.1.1 | Transitiva | MIT | Permisiva |
+| `tailwindcss` | 4.3.3 | Directa | MIT | Permisiva |
 | `tapable` | 2.3.3 | Transitiva | MIT | Permisiva |
 | `tinybench` | 2.9.0 | Transitiva | MIT | Permisiva |
 | `tinyexec` | 1.3.1 | Transitiva | MIT | Permisiva |
@@ -556,7 +533,7 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `type-check` | 0.4.0 | Transitiva | MIT | Permisiva |
 | `uri-js` | 4.4.1 | Transitiva | BSD-2-Clause | Permisiva |
 | `util-deprecate` | 1.0.2 | Transitiva | MIT | Permisiva |
-| `vite` | 6.4.3 | Directa | MIT | Permisiva |
+| `vite` | 6.4.4 | Directa | MIT | Permisiva |
 | `vitest` | 4.1.11 | Directa | MIT | Permisiva |
 | `vue-component-type-helpers` | 3.3.11 | Transitiva | MIT | Permisiva |
 | `vue-eslint-parser` | 10.4.1 | Transitiva | MIT | Permisiva |

@@ -15,7 +15,7 @@ import { requestProjects } from './domains/projects.js'
 import { requestReports } from './domains/reports.js'
 import { requestSuppliers } from './domains/suppliers.js'
 import { requestTeams } from './domains/teams.js'
-import { requestUploadthing } from './domains/uploadthing.js'
+import { requestUploads } from './domains/uploads.js'
 
 export {
   authHeaders,
@@ -44,7 +44,7 @@ const domainServices = {
   reports: requestReports,
   suppliers: requestSuppliers,
   teams: requestTeams,
-  uploadthing: requestUploadthing,
+  uploads: requestUploads,
 }
 
 export function apiFetch(path, options) {

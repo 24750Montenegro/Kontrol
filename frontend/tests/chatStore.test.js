@@ -40,8 +40,9 @@ vi.mock('socket.io-client', () => ({
   }),
 }))
 
-vi.mock('uploadthing/client', () => ({
-  genUploader: () => ({ uploadFiles: (...args) => uploadFilesMock(...args) }),
+vi.mock('@/services/fileUpload.js', async (importOriginal) => ({
+  ...(await importOriginal()),
+  uploadFiles: (...args) => uploadFilesMock(...args),
 }))
 
 const { useChatStore } = await import('@/stores/chat.js')
@@ -445,21 +446,21 @@ describe('chat store — acciones del usuario', () => {
     expect(uploadFilesMock).not.toHaveBeenCalled()
   })
 
-  it('uploadFiles normaliza lo que devuelve UploadThing y reporta fallos', async () => {
+  it('uploadFiles normaliza lo que devuelve Cloudinary y reporta fallos', async () => {
     const store = useChatStore()
     connected(store)
 
     uploadFilesMock.mockResolvedValueOnce([
-      { serverData: { url: 'https://cdn/a.png', type: 'image', filename: 'a.png' } },
-      { serverData: null },
+      { url: 'https://cdn/a.png', kind: 'image', filename: 'a.png', resourceType: 'image', publicId: 'kontrol/chat/a', bytes: 5 },
+      null,
     ])
     const ok = await store.uploadFiles([new Blob(['x'])])
     expect(ok.success).toBe(true)
     expect(ok.data).toHaveLength(1)
-    expect(uploadFilesMock.mock.calls[0][0]).toBe('chatAttachment')
-    expect(uploadFilesMock.mock.calls[0][1].headers()).toEqual({ Authorization: 'Bearer jwt' })
+    expect(ok.data[0]).toMatchObject({ type: 'image', url: 'https://cdn/a.png', publicId: 'image:kontrol/chat/a', size: 5 })
+    expect(uploadFilesMock.mock.calls[0][1]).toEqual({ purpose: 'chat', token: 'jwt' })
 
-    uploadFilesMock.mockResolvedValueOnce([{ serverData: {} }])
+    uploadFilesMock.mockResolvedValueOnce([{}])
     expect(await store.uploadFiles([new Blob(['x'])])).toEqual({ success: false, message: 'No attachment data was returned.' })
 
     uploadFilesMock.mockRejectedValueOnce(new Error('límite excedido'))
@@ -475,7 +476,7 @@ describe('chat store — acciones del usuario', () => {
     expect(await store.uploadFile(null)).toEqual({ success: false, message: 'No files selected.' })
 
     connected(store)
-    uploadFilesMock.mockResolvedValueOnce([{ serverData: { url: 'https://cdn/b' } }])
+    uploadFilesMock.mockResolvedValueOnce([{ url: 'https://cdn/b' }])
     const res = await store.uploadFile(new Blob(['x']))
     expect(res.success).toBe(true)
     expect(res.data.url).toBe('https://cdn/b')

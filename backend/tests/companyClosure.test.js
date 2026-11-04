@@ -11,9 +11,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('../src/db/pool.js', () => ({ default: { query: mocks.query, connect: mocks.connect } }))
 vi.mock('../src/db/mongo.js', () => ({ isMongoReady: mocks.isMongoReady }))
 vi.mock('../src/utils/logger.js', () => ({ logger: { error: mocks.error, info: vi.fn(), warn: vi.fn() } }))
-vi.mock('uploadthing/server', () => ({
-  UTApi: class { deleteFiles(keys) { return mocks.deleteFiles(keys) } },
-}))
+vi.mock('../src/services/fileStorage.js', () => ({ deleteStoredFiles: mocks.deleteFiles }))
 vi.mock('mongoose', () => ({ default: { connection: { transaction: mocks.transaction } } }))
 vi.mock('../src/services/accountMongoWrite.js', () => ({ MONGO_TRANSACTION_OPTIONS: {} }))
 vi.mock('../src/models/AgentConversation.js', () => ({ default: { deleteMany: vi.fn(async () => ({ deletedCount: 1 })) } }))
@@ -118,11 +116,12 @@ describe('closure records', () => {
 })
 
 describe('closure side effects', () => {
-  it('skips UploadThing when there are no files and fails when it does not confirm', async () => {
+  it('skips the file storage when there are no files and fails when a deletion fails', async () => {
     await deleteUploadedFiles([])
     expect(mocks.deleteFiles).not.toHaveBeenCalled()
-    mocks.deleteFiles.mockResolvedValue({ success: false })
-    await expect(deleteUploadedFiles(['key'])).rejects.toThrow('did not confirm')
+    mocks.deleteFiles.mockRejectedValue(new Error('Cloudinary did not confirm the deletion of a.'))
+    await expect(deleteUploadedFiles(['image:a'])).rejects.toThrow('did not confirm')
+    expect(mocks.deleteFiles).toHaveBeenCalledWith(['image:a'])
   })
 
   it('deletes assistant conversations and messages of the company in one transaction', async () => {

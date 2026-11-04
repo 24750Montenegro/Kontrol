@@ -305,21 +305,24 @@ async function ensureEvidenciaConArchivo({ idTarea, idUsuario, idProgressEntry, 
   let url = 'https://placehold.co/600x400?text=Evidencia'
   let publicId = null
 
-  try {
-    const { UTApi } = await import('uploadthing/server')
-    const utapi = new UTApi()
-    const png1x1 = Buffer.from(
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
-      'base64'
-    )
-    const file = new File([png1x1], 'evidencia-seed.png', { type: 'image/png' })
-    const [uploaded] = await utapi.uploadFiles([file])
-    if (uploaded?.data) {
-      url = uploaded.data.ufsUrl
-      publicId = uploaded.data.key
+  const { isFileStorageConfigured, uploadBuffer } = await import('../services/fileStorage.js')
+  if (isFileStorageConfigured()) {
+    try {
+      const png1x1 = Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+        'base64'
+      )
+      const uploaded = await uploadBuffer({
+        buffer: png1x1,
+        filename: 'evidencia-seed.png',
+        mimeType: 'image/png',
+        purpose: 'evidence',
+      })
+      url = uploaded.url
+      publicId = uploaded.key
+    } catch (error) {
+      console.warn('  ! No se pudo subir el archivo de evidencia a Cloudinary, se usa un placeholder:', error.message)
     }
-  } catch (error) {
-    console.warn('  ! No se pudo subir el archivo de evidencia a UploadThing, se usa un placeholder:', error.message)
   }
 
   const { rows: [evidencia] } = await pool.query(
