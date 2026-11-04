@@ -55,7 +55,7 @@ Kontrol no instala cookies de terceros, pero tu navegador se conecta a estos ser
 | Google Fonts | En cada carga, para las tipografías. | Tu dirección IP y datos técnicos de la petición. |
 | Icons8 | En las pantallas de inicio de sesión y registro, para el logo de Google. | Tu dirección IP y datos técnicos de la petición. |
 | Google | Solo si inicias sesión con Google. | Lo que gestione Google en su propio sitio, según su política de privacidad. |
-| UploadThing | Al subir o abrir un archivo adjunto. | La petición del archivo. |
+| Cloudinary | Al subir o abrir un archivo adjunto o una evidencia. | La petición del archivo. |
 
 Estas conexiones no dependen del aviso: Kontrol no las usa para guardar nada en tu navegador. Lo que cada servicio haga en su propio dominio se rige por su política.
 

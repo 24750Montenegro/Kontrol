@@ -85,7 +85,7 @@ Son peticiones a otros dominios. Kontrol no escribe nada en su nombre, pero el n
 | Google Fonts (`fonts.googleapis.com`, `fonts.gstatic.com`) | En cada carga, desde `frontend/index.html`. | IP, agente de usuario y `Referer`. No se observaron cookies de esas respuestas en el código, pero su comportamiento depende de Google. |
 | Icons8 (`img.icons8.com`) | Logo de Google en las pantallas de inicio de sesión y registro. | IP, agente de usuario y `Referer`. |
 | Google (`accounts.google.com`) | Solo si el usuario elige iniciar sesión con Google. | Las cookies que Google gestione en su propio dominio, según la política de Google. |
-| UploadThing | Al subir o abrir un adjunto. | Petición al servicio de archivos; no se observó escritura en el almacenamiento del navegador desde su cliente. |
+| Cloudinary (`api.cloudinary.com`, `res.cloudinary.com`) | Al subir o abrir un adjunto o una evidencia. | Subida directa con una firma que emite Kontrol y descarga del archivo; IP, agente de usuario y `Referer`. El cliente propio no escribe en el almacenamiento del navegador. |
 
 Este inventario es estático (código fuente). La comprobación en navegador real está en la [política](politica-cookies.md#cómo-se-verificó).
 

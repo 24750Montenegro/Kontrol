@@ -1,0 +1,86 @@
+name: Deploy
+
+# Cada push a main (en la práctica, el merge de un PR que ya pasó CI) se
+# despliega en la VM de producción de Google Cloud. workflow_dispatch permite
+# volver a desplegar a mano el último main desde la pestaña Actions.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Un despliegue a la vez, y el que está en curso nunca se cancela: cortarlo a
+# la mitad puede dejar contenedores a medio recrear. Si llegan dos pushes
+# seguidos, el segundo espera y luego despliega su propio commit.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Producción - VM de Google Cloud
+    runs-on: ubuntu-latest
+    # Las imágenes se construyen aquí, en el runner, y se cargan en la VM:
+    # la e2-micro de producción no tiene RAM para compilar el frontend.
+    timeout-minutes: 30
+    # La configuración vive como un secret por variable en el environment
+    # DEPLOY_ENV (Settings → Environments), con los mismos nombres que
+    # .env.deploy.example. SSH_KEY es el contenido de la clave privada.
+    environment:
+      name: DEPLOY_ENV
+      url: https://kontrol.it.com
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar clave SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          if [ -z "$SSH_KEY" ]; then
+            echo "::error::Falta el secret SSH_KEY en el environment DEPLOY_ENV. Ver docs/despliegue-produccion.md §5."
+            exit 1
+          fi
+          umask 077
+          printf '%s\n' "$SSH_KEY" | tr -d '\r' > "$RUNNER_TEMP/deploy_key"
+
+      # Los secrets que no existan llegan vacíos; deploy.sh exige los
+      # obligatorios y avisa de los opcionales.
+      - name: Desplegar en la VM
+        env:
+          GIT_REF: main
+          DEPLOY_SSH_KEY: ${{ runner.temp }}/deploy_key
+          VM_IP: ${{ secrets.VM_IP }}
+          VM_USER: ${{ secrets.VM_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+          PUBLIC_HOST: ${{ secrets.PUBLIC_HOST }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          AGENT_API_URL: ${{ secrets.AGENT_API_URL }}
+          AGENT_API_KEY: ${{ secrets.AGENT_API_KEY }}
+          AGENT_MODEL: ${{ secrets.AGENT_MODEL }}
+          AGENT_TEMPERATURE: ${{ secrets.AGENT_TEMPERATURE }}
+          AGENT_MAX_TOKENS: ${{ secrets.AGENT_MAX_TOKENS }}
+          AGENT_MAX_STEPS: ${{ secrets.AGENT_MAX_STEPS }}
+          AGENT_DISABLE_THINKING: ${{ secrets.AGENT_DISABLE_THINKING }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_SOCKET_URL: ${{ secrets.VITE_SOCKET_URL }}
+          VITE_WEBRTC_ICE_SERVERS: ${{ secrets.VITE_WEBRTC_ICE_SERVERS }}
+        run: ./scripts/deploy.sh
+
+      - name: Borrar la clave del runner
+        if: always()
+        run: rm -f "$RUNNER_TEMP/deploy_key"

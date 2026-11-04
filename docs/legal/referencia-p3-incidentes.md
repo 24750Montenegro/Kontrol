@@ -33,7 +33,7 @@ Cada requisito indica la cláusula de origen y cómo se comprueba que P-3 lo cum
 | R9 | Contener el incidente, preservar la evidencia y documentar las medidas (§7). | Adenda §8.5 | Lista de la §7 recorrida en el ensayo. |
 | R10 | No comunicarse con los titulares ni con autoridades por cuenta del Cliente salvo instrucción escrita del Cliente o una obligación legal directa de Kontrol; en este último caso, avisar antes al Cliente si la ley lo permite. Entregar al Cliente la información que necesite para sus propias comunicaciones. | Adenda §8.6 | Regla escrita en el procedimiento de P-3. |
 | R11 | Ensayo completo antes de que la adenda entre en vigencia y después una vez cada 12 meses. | Adenda §5.6 | Acta del ensayo con tiempos reales de T0 a cada hito. |
-| R12 | Avisar a los clientes afectados si un incidente proviene de un proveedor sin acuerdo de tratamiento verificado (UploadThing, Vercel) aplicando los mismos plazos. Que el proveedor no avise no exime a Kontrol de hacerlo cuando lo detecte. | Adenda §7.7 y §8.1 | Regla escrita en el procedimiento de P-3. |
+| R12 | Avisar a los clientes afectados si un incidente proviene de un proveedor sin acuerdo de tratamiento verificado (Cloudinary, Vercel) aplicando los mismos plazos. Que el proveedor no avise no exime a Kontrol de hacerlo cuando lo detecte. | Adenda §7.7 y §8.1 | Regla escrita en el procedimiento de P-3. |
 
 ## 3. Línea de tiempo
 
@@ -58,7 +58,7 @@ Son plazos del proveedor hacia Kontrol, no de Kontrol hacia sus clientes. Fuente
 | Google Cloud Platform | Sin demora indebida (CDPA §7.2) |
 | MongoDB Atlas | Sin demora indebida (DPA §§3.4, 4 y 9) |
 | Vercel | Sin demora indebida tras confirmar el incidente (DPA §8.3) |
-| UploadThing | Sin acuerdo de tratamiento verificado; sus términos (§2) obligan al cliente a comunicar los accesos no autorizados que detecte. No hay compromiso verificado de aviso del proveedor |
+| Cloudinary | Sin acuerdo de tratamiento verificado; sus términos y su DPA están sin revisar (sustituyó a UploadThing el 04-11-2026). No hay compromiso verificado de aviso del proveedor |
 | Proveedor del servidor IA ClawStitch | Sin identificar (condición A3 de la adenda) |
 
 ## 4. Campos del registro de incidentes
@@ -68,7 +68,7 @@ Son plazos del proveedor hacia Kontrol, no de Kontrol hacia sus clientes. Fuente
 | Identificador | Correlativo, por ejemplo `INC-2026-001` |
 | T0 | Fecha y hora del conocimiento y cómo se supo (detección propia, cliente, proveedor) |
 | Descripción | Qué ocurrió, cuándo empezó si se sabe y cómo se detectó |
-| Sistemas | PostgreSQL, MongoDB, UploadThing, servidor de aplicación, servidor IA, frontend, proveedor |
+| Sistemas | PostgreSQL, MongoDB, Cloudinary, servidor de aplicación, servidor IA, frontend, proveedor |
 | Tipo de datos | Datos del Cliente, Datos de cuenta y operación o ambos (§1) |
 | Empresas afectadas | `id_empresa` de cada una, o «todas» |
 | Categorías y volumen | Categorías de datos y número aproximado de titulares y de registros |
@@ -133,8 +133,8 @@ Las actualizaciones y el informe de cierre siguen la misma estructura e indican 
 Lista de partida que P-3 debe completar con su propio procedimiento:
 
 1. **Preservar la evidencia antes de redesplegar.** El despliegue recrea los contenedores y los registros de `stdout` pueden perderse ([inventario, §7](inventario-datos.md#7-logs-cachés-volúmenes-resultados-y-copias)). Primero hay que copiar los registros del backend, del proxy y del proveedor afectado.
-2. **Rotar los secretos comprometidos o en duda.** Los nombres están en `docker-compose.prod.yml`: `JWT_SECRET`, `DATABASE_URL` y `POSTGRES_PASSWORD`, `MONGODB_URI`, `UPLOADTHING_TOKEN`, `AGENT_API_KEY`, `GOOGLE_CLIENT_SECRET` y la clave de cifrado de integraciones (`INTEGRATION_ENCRYPTION_KEY` en `integrationService.js`).
-3. **Cortar las sesiones.** En `develop`, la verificación de JWT no consulta `usuario.activo` ni `token_version` (inventario §8). La única forma de invalidar sesiones de inmediato es rotar `JWT_SECRET`, y eso cierra la sesión de todos los usuarios. P-1 (rama `feat/p1-export-delete-account`) añade esa consulta en `requireAuth`. Cuando se integre, incrementar `token_version` de los usuarios afectados invalidará sus peticiones HTTP sin cerrar las de los demás. Hay que comprobar aparte Socket.IO y UploadThing, que verifican el JWT por su cuenta.
+2. **Rotar los secretos comprometidos o en duda.** Los nombres están en `docker-compose.prod.yml`: `JWT_SECRET`, `DATABASE_URL` y `POSTGRES_PASSWORD`, `MONGODB_URI`, `CLOUDINARY_API_SECRET`, `AGENT_API_KEY`, `GOOGLE_CLIENT_SECRET` y la clave de cifrado de integraciones (`INTEGRATION_ENCRYPTION_KEY` en `integrationService.js`).
+3. **Cortar las sesiones.** En `develop`, la verificación de JWT no consulta `usuario.activo` ni `token_version` (inventario §8). La única forma de invalidar sesiones de inmediato es rotar `JWT_SECRET`, y eso cierra la sesión de todos los usuarios. P-1 (rama `feat/p1-export-delete-account`) añade esa consulta en `requireAuth`. Cuando se integre, incrementar `token_version` de los usuarios afectados invalidará sus peticiones HTTP sin cerrar las de los demás. Hay que comprobar aparte Socket.IO, que verifica el JWT por su cuenta.
 4. **Credenciales de integraciones.** Si se expuso `credentials_enc` o la clave de cifrado, hay que pedir a los clientes afectados que regeneren las claves de sus proveedores (Slack, Teams, Telegram, Twilio, SendGrid y webhooks), porque son cuentas suyas.
 5. **Avisar al proveedor** cuando el incidente provenga de él o lo afecte, y anotar su número de caso.
 6. **Restaurar desde respaldo** solo con P-2 resuelto. Si se restaura, hay que volver a aplicar las eliminaciones pendientes (adenda §10.5).

@@ -5,6 +5,7 @@ import AgentConversation from '../models/AgentConversation.js'
 import AgentMessage from '../models/AgentMessage.js'
 import { MONGO_TRANSACTION_OPTIONS } from './accountMongoWrite.js'
 import { markSubscriptionsForCancellation } from './billingService.js'
+import { deleteStoredFiles } from './fileStorage.js'
 import { logger } from '../utils/logger.js'
 
 // Deadlines promised by the data processing addendum, §10
@@ -30,7 +31,7 @@ const ROUTE_ACTIONS = new Set(['a', 'r', 'c'])
 // Accounts, the closure record itself and the account outbox are never
 // company data. Reaching one of them means the schema changed: stop instead.
 const PROTECTED_TABLES = new Set(['usuario', 'company_closure', 'account_mongo_deletion_outbox'])
-// Columns holding UploadThing keys of files that belong to company rows.
+// Columns holding storage keys (Cloudinary) of files that belong to company rows.
 const FILE_KEY_COLUMNS = { evidencia: 'public_id' }
 
 const CLOSURE_COLUMNS = `company_id, company_name, reason, requested_by, requested_at,
@@ -326,11 +327,10 @@ export async function deleteCompanyRows(client, companyId) {
   return { rowsDeleted, fileKeys }
 }
 
+// Throws when a file could not be deleted, so the worker retries the step.
 export async function deleteUploadedFiles(keys) {
   if (!keys.length) return
-  const { UTApi } = await import('uploadthing/server')
-  const result = await new UTApi().deleteFiles(keys)
-  if (result?.success === false) throw new Error('UploadThing did not confirm the file deletion.')
+  await deleteStoredFiles(keys)
 }
 
 export async function deleteCompanyAssistantData(companyId) {

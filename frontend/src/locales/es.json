@@ -1770,7 +1770,7 @@
       "deleteWhat": "La eliminación es inmediata y no tiene período de gracia. Se desactiva tu cuenta, se borran tus credenciales y contacto de inicio de sesión, se eliminan tus conversaciones personales del asistente y tus mensajes de chat. Se conservan referencias técnicas anonimizadas que necesitan los registros del negocio; los registros de bitácora pueden conservar datos identificables.",
       "deleteRetained": "Las ventas, gastos, proyectos y demás registros compartidos de la empresa no se borran. Si eres titular, la titularidad pasa al administrador o miembro activo disponible; si no queda nadie, la empresa se cierra: hay 30 días para descargar sus datos y se eliminan a más tardar a los 60. Las otras cuentas no se eliminan.",
       "deleteDuration": "Para una empresa que sigue en uso, la política vigente no define un plazo de conservación de esos registros, así que no hay una fecha de borrado que podamos prometer mientras siga activa. Para eliminarlos, el titular puede cerrar la empresa. Esto no afirma que una ley exija conservarlos.",
-      "deleteExternal": "Esta operación no borra datos ya enviados a Google, proveedores de correo/SMS, al servicio de IA, UploadThing ni otras integraciones. No existe un flujo que invoque una baja por cuenta en esos proveedores; pueden conservar sus propias copias y plazos, hoy no verificados. Los archivos de la empresa solo se eliminan al cerrarla.",
+      "deleteExternal": "Esta operación no borra datos ya enviados a Google, proveedores de correo/SMS, al servicio de IA, Cloudinary ni otras integraciones. No existe un flujo que invoque una baja por cuenta en esos proveedores; pueden conservar sus propias copias y plazos, hoy no verificados. Los archivos de la empresa solo se eliminan al cerrarla.",
       "password": "Contraseña actual (si la cuenta usa contraseña)",
       "googleReauth": "Volver a autenticar con Google",
       "reauthenticating": "Conectando con Google…",
@@ -2609,7 +2609,7 @@
         },
         {
           "title": "5. Con quién compartimos información",
-          "body": "Con los miembros de tu empresa según sus permisos y con proveedores que nos ayudan a operar: servicios de base de datos y alojamiento, UploadThing para archivos adjuntos y Google si eliges iniciar sesión con Google. Si tu negocio conecta Slack, Microsoft Teams, Telegram, SMS, correo o webhooks, las alertas se envían a esos destinos según tu configuración. Algunos de estos proveedores pueden tratar los datos fuera de Guatemala."
+          "body": "Con los miembros de tu empresa según sus permisos y con proveedores que nos ayudan a operar: servicios de base de datos y alojamiento, Cloudinary para archivos adjuntos y Google si eliges iniciar sesión con Google. Si tu negocio conecta Slack, Microsoft Teams, Telegram, SMS, correo o webhooks, las alertas se envían a esos destinos según tu configuración. Algunos de estos proveedores pueden tratar los datos fuera de Guatemala."
         },
         {
           "title": "6. Cuánto tiempo los conservamos",
@@ -2657,7 +2657,7 @@
         },
         {
           "title": "5. Servicios externos",
-          "body": "Para mostrar la interfaz, tu navegador descarga tipografías de Google Fonts y el logo de Google desde Icons8. Si inicias sesión con Google o adjuntas archivos, se conecta también con Google o con UploadThing. Esos servicios reciben tu dirección IP y datos técnicos de la petición; Kontrol no guarda nada en tu navegador en su nombre."
+          "body": "Para mostrar la interfaz, tu navegador descarga tipografías de Google Fonts y el logo de Google desde Icons8. Si inicias sesión con Google o adjuntas archivos, se conecta también con Google o con Cloudinary. Esos servicios reciben tu dirección IP y datos técnicos de la petición; Kontrol no guarda nada en tu navegador en su nombre."
         },
         {
           "title": "6. Cómo cambiar tu decisión o borrarlo todo",

@@ -60,10 +60,10 @@
 </template>
 
 <script setup>
-import { apiFetch as requestApi, authHeaders, getApiBaseUrl } from '@/services/api.js'
+import { apiFetch as requestApi, authHeaders } from '@/services/api.js'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { genUploader } from 'uploadthing/client'
+import { toEvidencePayload, uploadFiles } from '@/services/fileUpload.js'
 import BaseModal from '@/components/UI/Modal/BaseModal.vue'
 import { statusLabel } from '@/utils/statusHelpers.js'
 import { taskStatusStyle, taskPriorityColor } from '@/utils/taskIndicatorColors.js'
@@ -83,9 +83,6 @@ const show = computed({
   get: () => props.modelValue,
   set: (v) => emit('update:modelValue', v),
 })
-
-const API = getApiBaseUrl()
-const uploadthing = genUploader({ url: `${API}/api/uploadthing` })
 
 const evidence = ref([])
 const uploading = ref(false)
@@ -122,11 +119,15 @@ async function handleFileSelected(event) {
   uploadError.value = ''
 
   try {
-    await uploadthing.uploadFiles('taskEvidence', {
-      files: [file],
-      input: { taskId: props.task.id_tarea },
-      headers: () => authHeaders(),
-    })
+    const [uploaded] = await uploadFiles([file], { purpose: 'evidence' })
+    const res = await requestApi(
+      `/api/projects/${props.projectId}/tasks/${props.task.id_tarea}/evidence`,
+      { method: 'POST', headers: authHeaders(), body: JSON.stringify(toEvidencePayload(uploaded)) }
+    )
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}))
+      throw new Error(body?.message || t('projects.tasks.detail.evidence.uploadError'))
+    }
     await loadEvidence()
   } catch (error) {
     uploadError.value = error?.message || t('projects.tasks.detail.evidence.uploadError')

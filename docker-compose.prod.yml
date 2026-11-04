@@ -1,3 +1,13 @@
+# Producción: kontrol.it.com, en una VM e2-micro de Google Cloud (1 GB de RAM,
+# 2 GB de swap, 30 GB de disco).
+#  - Las imágenes de backend y frontend se construyen fuera de la VM (en el
+#    runner de GitHub Actions o en la máquina de quien despliega) y se cargan
+#    con `docker load` (scripts/deploy.sh): compilar el frontend en 1 GB de RAM
+#    tarda demasiado. IMAGE_TAG es el commit desplegado.
+#  - MongoDB corre aquí mismo salvo que MONGODB_URI apunte a otro cluster.
+#  - Postgres, Mongo y Node van con la memoria recortada para caber en la VM.
+name: kontrol
+
 # DT-21 (RTF 2, OPS-02): sin rotación, los logs de los contenedores crecían
 # sin límite en el mismo disco que el Postgres de producción, que llegó al 98 %
 # el 26/09/2026 y se llenó el 01/10/2026. Tope de 30 MB por contenedor.
@@ -10,6 +20,7 @@ x-logging: &default-logging
 services:
   postgres:
     image: postgres:16-alpine
+    command: ["postgres", "-c", "shared_buffers=64MB", "-c", "max_connections=30"]
     environment:
       - POSTGRES_DB=kontrol
       - POSTGRES_USER=postgres
@@ -21,30 +32,55 @@ services:
       - "127.0.0.1:5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d kontrol"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
     restart: unless-stopped
     logging: *default-logging
 
+  mongo:
+    image: mongo:7
+    # Las transacciones del backend requieren replica set. La caché de
+    # WiredTiger por defecto es la mitad de la RAM; aquí no cabe.
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--wiredTigerCacheSizeGB", "0.25"]
+    environment:
+      MONGO_REPLICA_HOST: mongo:27017
+    volumes:
+      - mongo_data:/data/db
+      - ./scripts/mongo-replica-health.js:/scripts/mongo-replica-health.js:ro
+    healthcheck:
+      # Cada chequeo lanza mongosh (~60 MB): espaciado una vez arrancado.
+      test: ["CMD", "mongosh", "--quiet", "/scripts/mongo-replica-health.js"]
+      interval: 60s
+      timeout: 20s
+      retries: 5
+      start_period: 120s
+      start_interval: 5s
+    restart: unless-stopped
+    logging: *default-logging
+
   backend:
+    image: kontrol-backend:${IMAGE_TAG:-latest}
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     environment:
       - NODE_ENV=production
+      - NODE_OPTIONS=--max-old-space-size=256
       - PORT=3000
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/kontrol
-      - MONGODB_URI=${MONGODB_URI}
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongo:27017/kontrol_chat?replicaSet=rs0}
       - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-8h}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL:-}
       - FRONTEND_URL=${FRONTEND_URL}
-      - UPLOADTHING_TOKEN=${UPLOADTHING_TOKEN}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME:-}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY:-}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET:-}
       - AGENT_API_URL=${AGENT_API_URL:-}
       - AGENT_API_KEY=${AGENT_API_KEY:-}
       - AGENT_MODEL=${AGENT_MODEL:-}
@@ -57,10 +93,13 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      mongo:
+        condition: service_healthy
     restart: unless-stopped
     logging: *default-logging
 
   frontend:
+    image: kontrol-frontend:${IMAGE_TAG:-latest}
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -93,5 +132,6 @@ services:
 
 volumes:
   postgres_data:
+  mongo_data:
   caddy_data:
   caddy_config:

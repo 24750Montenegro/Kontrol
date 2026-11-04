@@ -13,6 +13,7 @@ import { errorHandler } from '../../src/middleware/errorHandler.js'
 import integrationRoutes from '../../src/routes/integrationRoutes.js'
 import inventoryMovementRoutes from '../../src/routes/inventoryMovementRoutes.js'
 import authRoutes from '../../src/routes/authRoutes.js'
+import uploadRoutes from '../../src/routes/uploadRoutes.js'
 
 export const JWT_SECRET = 'secreto-de-pruebas-hu31'
 process.env.JWT_SECRET = JWT_SECRET
@@ -70,6 +71,7 @@ export function buildTestApp({ mockSessionAccount = true } = {}) {
   app.use('/api/integrations', integrationRoutes)
   app.use('/api/inventory-movements', inventoryMovementRoutes)
   app.use('/api/auth', authRoutes)
+  app.use('/api/uploads', uploadRoutes)
 
   app.use(errorHandler)
 

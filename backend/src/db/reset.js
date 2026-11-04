@@ -24,12 +24,11 @@ async function deleteOrphanedEvidenceFiles() {
   if (!publicIds.length) return
 
   try {
-    const { UTApi } = await import('uploadthing/server')
-    const utapi = new UTApi()
-    await utapi.deleteFiles(publicIds)
-    console.log(`  ${publicIds.length} archivo(s) de evidencia eliminados de UploadThing.`)
+    const { deleteStoredFiles } = await import('../services/fileStorage.js')
+    const { deleted } = await deleteStoredFiles(publicIds)
+    console.log(`  ${deleted} archivo(s) de evidencia eliminados de Cloudinary.`)
   } catch (error) {
-    console.warn('  ! No se pudieron eliminar algunos archivos de UploadThing (no bloqueante):', error.message)
+    console.warn('  ! No se pudieron eliminar algunos archivos de Cloudinary (no bloqueante):', error.message)
   }
 }
 

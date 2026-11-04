@@ -121,7 +121,7 @@ Todas viven en `backend/.env` (copiado desde `backend/.env.example`). **Nunca** 
 | `FRONTEND_URL` | sí | URL del frontend para redirigir tras el callback OAuth. |
 | `MONGODB_URI` | sí | Conexión a MongoDB (chat). En Docker el host es `mongo`. |
 | `INTEGRATION_ENCRYPTION_KEY` | — | Clave para cifrar API keys/webhooks guardados. Si falta, usa `JWT_SECRET`. |
-| `UPLOADTHING_TOKEN` | para adjuntos | Token de [UploadThing](https://uploadthing.com) (subida de archivos/imágenes/audio en el chat). |
+| `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | para adjuntos | Credenciales de [Cloudinary](https://cloudinary.com) (adjuntos del chat y evidencias de tareas). Están en *Dashboard → API Keys*. Sin ellas no se pueden subir archivos. |
 | `AGENT_API_KEY` | para el agente IA | Token Bearer del endpoint Qwen de ClawStitch. |
 | `AGENT_API_URL` | — | Override opcional de la base OpenAI-compatible del agente. Default: `https://model.clawstitch.com/v1`. |
 | `AGENT_MODEL` | — | Modelo del agente (default `Qwen/Qwen3.6-27B-FP8`). |
@@ -261,6 +261,10 @@ Los reportes de cobertura (`coverage-backend`, `coverage-frontend`) y el resumen
 
 El job de carga es una prueba corta de regresión (5–10 usuarios virtuales, ~3.5 min), no una medición de capacidad. La batería completa contra el ambiente de pruebas de la VM está en `.github/workflows/load-test.yml`, se lanza a mano y sus resultados están en `docs/pruebas-carga-estres.md`. Detalles en [`k6/README.md`](k6/README.md).
 
+### Despliegue continuo
+
+Cada push a `main` dispara `.github/workflows/deploy.yml`, que despliega en la VM de producción de Google Cloud (`https://kontrol.it.com`) con `scripts/deploy.sh`. Lee la configuración de los secrets del environment `DEPLOY_ENV`, uno por variable de `.env.deploy.example`. Requisitos y pasos en [`docs/despliegue-produccion.md`](docs/despliegue-produccion.md) §5.
+
 ---
 
 ## Cobertura de código
@@ -379,7 +383,7 @@ El 14.52 % de inventario del frontend se concentra en los tres componentes de ve
 | | Backend | Frontend |
 |---|---|---|
 | `include` | `src/**/*.js` | `src/**/*.{js,vue}` |
-| `exclude` | `tests/**`, `src/index.js`, `src/uploadthing.js`, `src/db/**`, `src/models/**` | `tests/**`, `src/main.js`, `src/router/**`, `src/locales/**`, `src/assets/**`, `src/styles/**`, `src/components/UI/Backgrounds/**` |
+| `exclude` | `tests/**`, `src/index.js`, `src/db/**`, `src/models/**` | `tests/**`, `src/main.js`, `src/router/**`, `src/locales/**`, `src/assets/**`, `src/styles/**`, `src/components/UI/Backgrounds/**` |
 | Denominador | 83 archivos, 3 929 sentencias | 129 archivos, 9 152 sentencias |
 
 Queda fuera el arranque del proceso, la configuración de SDK externos, las conexiones y scripts de base de datos, los esquemas declarativos de Mongoose, la tabla de rutas, los diccionarios de i18n, los recursos estáticos y los fondos WebGL. `src/socket/index.js` sí entra: son 450 líneas de lógica de chat, no infraestructura. Las extensiones explícitas del `include` del frontend dejan fuera los `.css`, `.png` y `.json` que antes figuraban como archivos medidos.

@@ -49,7 +49,7 @@ server {
     # vercel.json; frontend/tests/securityHeaders.test.js comprueba que no se
     # separen.
     #  - connect-src admite https: y wss: porque la API puede vivir en otro
-    #    origen (VITE_API_URL) y UploadThing sube directo a su servidor; y
+    #    origen (VITE_API_URL) y los adjuntos suben directo a Cloudinary; y
     #    blob: y data: porque three.js carga el logo 3D con fetch sobre ellas.
     #  - camera y microphone quedan en (self): el escáner del POS y las
     #    llamadas usan getUserMedia.

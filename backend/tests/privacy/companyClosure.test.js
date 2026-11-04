@@ -2,10 +2,11 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 
-// Only UploadThing is stubbed. PostgreSQL, Mongo and the worker are real.
+// Only the Cloudinary file storage is stubbed. PostgreSQL, Mongo and the worker are real.
 const uploads = vi.hoisted(() => ({ deleteFiles: vi.fn() }))
-vi.mock('uploadthing/server', () => ({
-  UTApi: class { deleteFiles(keys) { return uploads.deleteFiles(keys) } },
+vi.mock('../../src/services/fileStorage.js', async (importOriginal) => ({
+  ...(await importOriginal()),
+  deleteStoredFiles: (keys) => uploads.deleteFiles(keys),
 }))
 import {
   api,
@@ -112,11 +113,12 @@ async function seedCompany(ctx) {
      VALUES ($1, $2, 'Avance', 10) RETURNING id_progress_entry`,
     [projectId, ownerId]
   )
-  const fileKey = unique('file-key')
+  const publicId = `kontrol/evidence/${unique('file')}`
+  const fileKey = `image:${publicId}`
   await query(
     `INSERT INTO public.evidencia (url_archivo, tipo_archivo, id_tarea, id_usuario, public_id, id_progress_entry)
      VALUES ($1, 'IMAGEN', $2, $3, $4, $5)`,
-    [`https://utfs.io/f/${fileKey}`, task.id_tarea, member.id_usuario, fileKey, entry.id_progress_entry]
+    [`https://res.cloudinary.com/kontrol/image/upload/v1/${publicId}.png`, task.id_tarea, member.id_usuario, fileKey, entry.id_progress_entry]
   )
   const team = await one(
     'INSERT INTO public.equipo (nombre, id_empresa, id_lider) VALUES ($1, $2, $3) RETURNING id_equipo',
@@ -327,14 +329,14 @@ describe('company closure: deletion and certificate', () => {
     expect(Object.values(await companyRowCounts(ctx.company.id_empresa)).every((n) => n === 0)).toBe(true)
   })
 
-  it('keeps the database deletion and retries the files when UploadThing fails', async () => {
+  it('keeps the database deletion and retries the files when Cloudinary fails', async () => {
     const ctx = await owner()
     const seeded = await seedCompany(ctx)
     await requestClosure(ctx)
     await endExportWindow(ctx.company.id_empresa)
-    uploads.deleteFiles.mockRejectedValueOnce(new Error('UploadThing offline'))
+    uploads.deleteFiles.mockRejectedValueOnce(new Error('Cloudinary offline'))
 
-    await expect(processCompanyClosure(ctx.company.id_empresa)).rejects.toThrow('UploadThing offline')
+    await expect(processCompanyClosure(ctx.company.id_empresa)).rejects.toThrow('Cloudinary offline')
     const pending = await closureRow(ctx.company.id_empresa)
     expect(pending.status).toBe('deleting')
     expect(pending.sql_deleted_at).not.toBeNull()

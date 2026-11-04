@@ -15,7 +15,7 @@ import teamRoutes from './routes/teamRoutes.js'
 import agentRoutes from './routes/agentRoutes.js'
 import integrationRoutes from './routes/integrationRoutes.js'
 import marketingRoutes from './routes/marketingRoutes.js'
-import uploadthingRouter from './uploadthing.js'
+import uploadRoutes from './routes/uploadRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import billingRoutes from './routes/billingRoutes.js'
 import legalRoutes from './routes/legalRoutes.js'
@@ -48,6 +48,6 @@ router.use('/agent', agentRoutes)
 router.use('/integrations', integrationRoutes)
 router.use('/marketing', marketingRoutes)
 router.use('/billing', billingRoutes)
-router.use('/uploadthing', uploadthingRouter)
+router.use('/uploads', uploadRoutes)
 
 export default router

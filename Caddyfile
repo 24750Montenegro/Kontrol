@@ -8,3 +8,13 @@
   encode zstd gzip
   reverse_proxy frontend:80
 }
+
+# www.<PUBLIC_HOST> redirige al dominio principal, con su propio certificado.
+# Requiere un CNAME de www hacia PUBLIC_HOST; mientras no exista, Caddy solo
+# registra el fallo al pedir ese certificado y el dominio principal sigue igual.
+www.{$PUBLIC_HOST} {
+  tls {
+    protocols tls1.2 tls1.3
+  }
+  redir https://{$PUBLIC_HOST}{uri} permanent
+}
