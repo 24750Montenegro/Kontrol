@@ -116,7 +116,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ==============================================================================
-@intlify/core-base@11.4.12
+@intlify/core-base@11.4.18
 Licencia: MIT
 
 The MIT License (MIT)
@@ -141,7 +141,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ==============================================================================
-@intlify/devtools-types@11.4.12
+@intlify/devtools-types@11.4.18
 Licencia: MIT
 
 The MIT License (MIT)
@@ -166,7 +166,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ==============================================================================
-@intlify/message-compiler@11.4.12
+@intlify/message-compiler@11.4.18
 Licencia: MIT
 
 The MIT License (MIT)
@@ -191,7 +191,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ==============================================================================
-@intlify/shared@11.4.12
+@intlify/shared@11.4.18
 Licencia: MIT
 
 The MIT License (MIT)
@@ -8044,7 +8044,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ==============================================================================
-vue-i18n@11.4.12
+vue-i18n@11.4.18
 Licencia: MIT
 
 The MIT License (MIT)

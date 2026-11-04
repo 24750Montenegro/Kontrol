@@ -31,10 +31,10 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `@babel/helper-validator-identifier` | 7.29.7 | Transitiva | MIT | Permisiva |
 | `@babel/parser` | 7.29.9 | Transitiva | MIT | Permisiva |
 | `@babel/types` | 7.29.8 | Transitiva | MIT | Permisiva |
-| `@intlify/core-base` | 11.4.12 | Transitiva | MIT | Permisiva |
-| `@intlify/devtools-types` | 11.4.12 | Transitiva | MIT | Permisiva |
-| `@intlify/message-compiler` | 11.4.12 | Transitiva | MIT | Permisiva |
-| `@intlify/shared` | 11.4.12 | Transitiva | MIT | Permisiva |
+| `@intlify/core-base` | 11.4.18 | Transitiva | MIT | Permisiva |
+| `@intlify/devtools-types` | 11.4.18 | Transitiva | MIT | Permisiva |
+| `@intlify/message-compiler` | 11.4.18 | Transitiva | MIT | Permisiva |
+| `@intlify/shared` | 11.4.18 | Transitiva | MIT | Permisiva |
 | `@jridgewell/sourcemap-codec` | 1.6.0 | Transitiva | MIT | Permisiva |
 | `@mongodb-js/saslprep` | 1.5.4 | Transitiva | MIT | Permisiva |
 | `@rollup/rollup-linux-x64-gnu` | 4.63.5 | Directa | MIT | Permisiva |
@@ -240,7 +240,7 @@ Las obligaciones de cada licencia, su veredicto y el plan de acción están en [
 | `vary` | 1.1.2 | Transitiva | MIT | Permisiva |
 | `vue` | 3.5.43 | Directa | MIT | Permisiva |
 | `vue-demi` | 0.14.10 | Transitiva | MIT | Permisiva |
-| `vue-i18n` | 11.4.12 | Directa | MIT | Permisiva |
+| `vue-i18n` | 11.4.18 | Directa | MIT | Permisiva |
 | `vue-router` | 4.6.4 | Directa | MIT | Permisiva |
 | `web-streams-polyfill` | 3.3.3 | Transitiva | MIT | Permisiva |
 | `webidl-conversions` | 7.0.0 | Transitiva | BSD-2-Clause | Permisiva |

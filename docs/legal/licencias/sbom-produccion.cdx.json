@@ -318,8 +318,8 @@
       "type": "library",
       "name": "core-base",
       "group": "@intlify",
-      "version": "11.4.12",
-      "bom-ref": "control@1.0.0|@intlify/core-base@11.4.12",
+      "version": "11.4.18",
+      "bom-ref": "control@1.0.0|@intlify/core-base@11.4.18",
       "licenses": [
         {
           "license": {
@@ -328,15 +328,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40intlify/core-base@11.4.12",
+      "purl": "pkg:npm/%40intlify/core-base@11.4.18",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@intlify/core-base/-/core-base-11.4.12.tgz",
+          "url": "https://registry.npmjs.org/@intlify/core-base/-/core-base-11.4.18.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "b6f6145a03099a4f94bcb15aedc93cb9143d9b5f6d4c8f41d9ed35282023055efe1cddb314b9e7391bcc3bce613353fc0c8c38313be8b7565205476847e17a8c"
+              "content": "babc94edc95138a209b022ccf08f09e86038a70f44548e410a9b67150b25a545c63e3fdd0ab96b8b139a57fea02f58cb5d97b71e5f18637c8d8b6e1b81f86f07"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -353,8 +353,8 @@
       "type": "library",
       "name": "devtools-types",
       "group": "@intlify",
-      "version": "11.4.12",
-      "bom-ref": "control@1.0.0|@intlify/devtools-types@11.4.12",
+      "version": "11.4.18",
+      "bom-ref": "control@1.0.0|@intlify/devtools-types@11.4.18",
       "licenses": [
         {
           "license": {
@@ -363,15 +363,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40intlify/devtools-types@11.4.12",
+      "purl": "pkg:npm/%40intlify/devtools-types@11.4.18",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@intlify/devtools-types/-/devtools-types-11.4.12.tgz",
+          "url": "https://registry.npmjs.org/@intlify/devtools-types/-/devtools-types-11.4.18.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "0ad91cb3c0d022d6842fd1c7764c9ab0515c6453f9f6206f666ae3880edbef6245abf26523a73a18f40737ba04c1b613a3cae774f32a358ed25fbd5a3e6e0c90"
+              "content": "27bfcf5b8c124a28d5cd1f23e7bf2adbefc72023db034f5184220c66c2c710bf0f95191d5d755a761ba7af12ceadef1c05ef1d0cae78f76d9fae96b467552298"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -388,8 +388,8 @@
       "type": "library",
       "name": "message-compiler",
       "group": "@intlify",
-      "version": "11.4.12",
-      "bom-ref": "control@1.0.0|@intlify/message-compiler@11.4.12",
+      "version": "11.4.18",
+      "bom-ref": "control@1.0.0|@intlify/message-compiler@11.4.18",
       "licenses": [
         {
           "license": {
@@ -398,15 +398,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40intlify/message-compiler@11.4.12",
+      "purl": "pkg:npm/%40intlify/message-compiler@11.4.18",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@intlify/message-compiler/-/message-compiler-11.4.12.tgz",
+          "url": "https://registry.npmjs.org/@intlify/message-compiler/-/message-compiler-11.4.18.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "90173393daf8e1f741627902e6d5d159afd4680f9ef4d8255c4ddc5fb8cf9c37769c7ce814762b2867c86e7f09159a4c03da267b1659a365b13a94ef947763b3"
+              "content": "f6fdacd3e988b896853b25817d9047ad5fe0f552c51ffe28b31ff3690e760604fa150923bd35875b236b882311a96b373c4b812b2b26c1353098da60f623e327"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -423,8 +423,8 @@
       "type": "library",
       "name": "shared",
       "group": "@intlify",
-      "version": "11.4.12",
-      "bom-ref": "control@1.0.0|@intlify/shared@11.4.12",
+      "version": "11.4.18",
+      "bom-ref": "control@1.0.0|@intlify/shared@11.4.18",
       "licenses": [
         {
           "license": {
@@ -433,15 +433,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/%40intlify/shared@11.4.12",
+      "purl": "pkg:npm/%40intlify/shared@11.4.18",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/@intlify/shared/-/shared-11.4.12.tgz",
+          "url": "https://registry.npmjs.org/@intlify/shared/-/shared-11.4.18.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "a237de85a5cc16b1857129caddc24f68cc65ad25d3f05c19506f47e22f96297e0e143e1897558a75399fc280b44449f021f4eb9edd50851b5df24c22fed7ba6d"
+              "content": "f2aed447f78014fd313999dd68294a61e87f95691c20f399916b14f3908c47d0582e34de68436900559f141bee508f1f173d010ed66f47f7e06f08a241aa9c0e"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -7421,8 +7421,8 @@
     {
       "type": "library",
       "name": "vue-i18n",
-      "version": "11.4.12",
-      "bom-ref": "control@1.0.0|vue-i18n@11.4.12",
+      "version": "11.4.18",
+      "bom-ref": "control@1.0.0|vue-i18n@11.4.18",
       "licenses": [
         {
           "license": {
@@ -7431,15 +7431,15 @@
           }
         }
       ],
-      "purl": "pkg:npm/vue-i18n@11.4.12",
+      "purl": "pkg:npm/vue-i18n@11.4.18",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/vue-i18n/-/vue-i18n-11.4.12.tgz",
+          "url": "https://registry.npmjs.org/vue-i18n/-/vue-i18n-11.4.18.tgz",
           "type": "distribution",
           "hashes": [
             {
               "alg": "SHA-512",
-              "content": "caf02bbefa3712b2ca14d950ad95069919312ff72d339c4562d13d1714ca884fcf6a558fd5b9d3a290606d24462e5b98132612365d4fb7c97627bcd56af6d7c3"
+              "content": "34c3ce4eba925153c9c52ba2622d2e276ab46d9a2fa06b906f5de163d951fb2c1bfc53ad251a17ab13d170effae020de778b6493d959ea144f1bb1c13f59f1be"
             }
           ],
           "comment": "as detected from npm-ls property \"resolved\" and property \"integrity\""
@@ -7814,35 +7814,35 @@
         "control@1.0.0|pinia@2.3.1",
         "control@1.0.0|socket.io-client@4.8.3",
         "control@1.0.0|three@0.183.2",
-        "control@1.0.0|vue-i18n@11.4.12",
+        "control@1.0.0|vue-i18n@11.4.18",
         "control@1.0.0|vue-router@4.6.4",
         "control@1.0.0|vue@3.5.43"
       ]
     },
     {
-      "ref": "control@1.0.0|@intlify/core-base@11.4.12",
+      "ref": "control@1.0.0|@intlify/core-base@11.4.18",
       "dependsOn": [
-        "control@1.0.0|@intlify/devtools-types@11.4.12",
-        "control@1.0.0|@intlify/message-compiler@11.4.12",
-        "control@1.0.0|@intlify/shared@11.4.12"
+        "control@1.0.0|@intlify/devtools-types@11.4.18",
+        "control@1.0.0|@intlify/message-compiler@11.4.18",
+        "control@1.0.0|@intlify/shared@11.4.18"
       ]
     },
     {
-      "ref": "control@1.0.0|@intlify/devtools-types@11.4.12",
+      "ref": "control@1.0.0|@intlify/devtools-types@11.4.18",
       "dependsOn": [
-        "control@1.0.0|@intlify/core-base@11.4.12",
-        "control@1.0.0|@intlify/shared@11.4.12"
+        "control@1.0.0|@intlify/core-base@11.4.18",
+        "control@1.0.0|@intlify/shared@11.4.18"
       ]
     },
     {
-      "ref": "control@1.0.0|@intlify/message-compiler@11.4.12",
+      "ref": "control@1.0.0|@intlify/message-compiler@11.4.18",
       "dependsOn": [
-        "control@1.0.0|@intlify/shared@11.4.12",
+        "control@1.0.0|@intlify/shared@11.4.18",
         "control@1.0.0|source-map-js@1.2.2"
       ]
     },
     {
-      "ref": "control@1.0.0|@intlify/shared@11.4.12"
+      "ref": "control@1.0.0|@intlify/shared@11.4.18"
     },
     {
       "ref": "control@1.0.0|@jridgewell/sourcemap-codec@1.6.0"
@@ -8929,11 +8929,11 @@
       ]
     },
     {
-      "ref": "control@1.0.0|vue-i18n@11.4.12",
+      "ref": "control@1.0.0|vue-i18n@11.4.18",
       "dependsOn": [
-        "control@1.0.0|@intlify/core-base@11.4.12",
-        "control@1.0.0|@intlify/devtools-types@11.4.12",
-        "control@1.0.0|@intlify/shared@11.4.12",
+        "control@1.0.0|@intlify/core-base@11.4.18",
+        "control@1.0.0|@intlify/devtools-types@11.4.18",
+        "control@1.0.0|@intlify/shared@11.4.18",
         "control@1.0.0|@vue/devtools-api@6.6.4",
         "control@1.0.0|vue@3.5.43"
       ]
