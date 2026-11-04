@@ -3,7 +3,7 @@
 #  - Las imágenes de backend y frontend se construyen fuera de la VM (en el
 #    runner de GitHub Actions o en la máquina de quien despliega) y se cargan
 #    con `docker load` (scripts/deploy.sh): compilar el frontend en 1 GB de RAM
-#    tarda demasiado. IMAGE_TAG es el commit desplegado.
+#    tarda demasiado. IMAGE_TAG es <commit>-<hora UTC del build>.
 #  - MongoDB corre aquí mismo salvo que MONGODB_URI apunte a otro cluster.
 #  - Postgres, Mongo y Node van con la memoria recortada para caber en la VM.
 name: kontrol

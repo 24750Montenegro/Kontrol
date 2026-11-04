@@ -92,7 +92,11 @@ command -v docker >/dev/null 2>&1 || { echo "Error: hace falta Docker en esta m�
 [ -n "${AGENT_API_KEY:-}" ] || echo "Aviso: sin AGENT_API_KEY; el agente de IA quedará deshabilitado."
 [ -n "${MONGODB_URI:-}" ] || echo "Aviso: sin MONGODB_URI; el chat usará el MongoDB local de la VM."
 
-IMAGE_TAG="${REMOTE_SHA:0:12}"
+# Commit + hora UTC del build: único por despliegue, también al volver a
+# desplegar el mismo commit. Compose decide si recrear un contenedor por el
+# nombre de la imagen, no por su contenido; con un tag repetido dejaría
+# corriendo la imagen anterior.
+IMAGE_TAG="${REMOTE_SHA:0:12}-$(date -u +%Y%m%d%H%M%S)"
 SSH="ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -i $SSH_KEY $VM_USER@$VM_IP"
 
 ENV_CONTENT=$(printf '%s\n' \
@@ -127,14 +131,16 @@ trap 'rm -rf "$BUILD_DIR"' EXIT
 
 echo "==> [1/6] Construyendo imágenes de ${REMOTE_SHA:0:7} (origin/$GIT_REF)..."
 git -C "$ROOT" archive "$REMOTE_SHA" backend frontend | tar -x -C "$BUILD_DIR"
-docker build -q -t "kontrol-backend:$IMAGE_TAG" "$BUILD_DIR/backend"
-docker build -q -t "kontrol-frontend:$IMAGE_TAG" \
+# Las etiquetas identifican el build en la VM: el ID de imagen no sirve,
+# porque cambia entre el store clásico de Docker y el de containerd (la VM
+# usa este último desde Docker 29).
+LABELS=(--label "kontrol.build-id=$IMAGE_TAG" --label "org.opencontainers.image.revision=$REMOTE_SHA")
+docker build -q "${LABELS[@]}" -t "kontrol-backend:$IMAGE_TAG" "$BUILD_DIR/backend"
+docker build -q "${LABELS[@]}" -t "kontrol-frontend:$IMAGE_TAG" \
   --build-arg "VITE_API_URL=${VITE_API_URL-}" \
   --build-arg "VITE_SOCKET_URL=${VITE_SOCKET_URL-}" \
   --build-arg "VITE_WEBRTC_ICE_SERVERS=${VITE_WEBRTC_ICE_SERVERS-}" \
   "$BUILD_DIR/frontend"
-BACKEND_ID="$(docker image inspect --format '{{.Id}}' "kontrol-backend:$IMAGE_TAG")"
-FRONTEND_ID="$(docker image inspect --format '{{.Id}}' "kontrol-frontend:$IMAGE_TAG")"
 
 echo "==> [2/6] Subiendo configuración a $VM_USER@$VM_IP:$APP_DIR ..."
 $SSH "[ -d $APP_DIR ] || { sudo mkdir -p $APP_DIR && sudo chown \$USER:\$USER $APP_DIR; }"
@@ -177,31 +183,32 @@ $SSH "
 
 # DT-21 (RTF 2, DEP-01): un despliegue llegó a dejar contenedores con la imagen
 # anterior, y producción corrió una versión distinta de la que se creía. Aquí
-# se comprueba que cada contenedor corre exactamente la imagen recién
-# construida (el ID se conserva en docker save/load). El disco solo avisa: el
-# 01/10/2026 se llenó y rompió el build.
+# se comprueba que cada contenedor se creó desde el tag de este build y que su
+# imagen lleva la etiqueta kontrol.build-id de este build. El disco solo
+# avisa: el 01/10/2026 se llenó y rompió el build.
 echo "==> [6/6] Verificando la versión desplegada..."
 $SSH "
   set -e
   cd $APP_DIR
-  echo '  commit: ${REMOTE_SHA:0:7} (origin/$GIT_REF)'
+  echo '  commit: ${REMOTE_SHA:0:7} (origin/$GIT_REF), build $IMAGE_TAG'
   stale=0
-  for pair in backend=$BACKEND_ID frontend=$FRONTEND_ID; do
-    svc=\${pair%%=*}
-    expected=\${pair#*=}
-    running=\$(docker inspect --format '{{.Image}}' \"\$($COMPOSE ps -q \$svc)\")
-    if [ \"\$running\" = \"\$expected\" ]; then
-      echo \"  \$svc: imagen recién construida (\${running:7:12})\"
+  for svc in backend frontend; do
+    cid=\$($COMPOSE ps -q \$svc)
+    ref=\$(docker inspect --format '{{.Config.Image}}' \"\$cid\")
+    build=\$(docker inspect --format '{{index .Config.Labels \"kontrol.build-id\"}}' \"\$cid\")
+    if [ \"\$ref\" = \"kontrol-\$svc:$IMAGE_TAG\" ] && [ \"\$build\" = '$IMAGE_TAG' ]; then
+      echo \"  \$svc: corre el build recién cargado\"
     else
-      echo \"  \$svc: corre \${running:7:12}, pero la construida es \${expected:7:12}\"
+      echo \"  \$svc: corre \$ref (build \${build:-sin etiqueta}), se esperaba kontrol-\$svc:$IMAGE_TAG\"
       stale=1
     fi
   done
   [ \"\$stale\" = 0 ] || { echo '  Hay contenedores con una imagen anterior.'; exit 1; }
   # Conserva la versión actual y la anterior (para volver atrás a mano) y
-  # borra el resto.
+  # borra el resto. Los tags terminan en la hora del build, así que ordenarlos
+  # al revés pone primero los más nuevos.
   for repo in kontrol-backend kontrol-frontend; do
-    docker images \"\$repo\" --format '{{.Tag}}' | grep -vx '$IMAGE_TAG' | tail -n +2 \
+    docker images \"\$repo\" --format '{{.Tag}}' | grep -vx '$IMAGE_TAG' | sort -t- -k2 -r | tail -n +2 \
       | xargs -r -I{} docker rmi \"\$repo:{}\" >/dev/null 2>&1 || true
   done
   docker image prune -f >/dev/null 2>&1 || true

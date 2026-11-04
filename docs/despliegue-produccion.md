@@ -135,14 +135,14 @@ El script se niega a seguir si hay cambios sin commit o si la rama local no coin
 
 > **Solo se despliega `main`.** Desplegar `develop` u otra rama a mano pone esa rama en producción.
 
-Pasos que ejecuta. `IMAGE_TAG` son los primeros 12 caracteres del commit de `origin/<rama>` verificado al empezar:
+Pasos que ejecuta. `IMAGE_TAG` es `<commit>-<AAAAMMDDhhmmss>`: los primeros 12 caracteres del commit de `origin/<rama>` verificado al empezar y la hora UTC del build, para que cada despliegue tenga un tag nuevo aunque repita el commit:
 
-1. **Imágenes.** Construye `kontrol-backend:<IMAGE_TAG>` y `kontrol-frontend:<IMAGE_TAG>` en la máquina que despliega, a partir de `git archive` del commit (sin `node_modules` ni archivos sin commit).
+1. **Imágenes.** Construye `kontrol-backend:<IMAGE_TAG>` y `kontrol-frontend:<IMAGE_TAG>` en la máquina que despliega, a partir de `git archive` del commit (sin `node_modules` ni archivos sin commit), con las etiquetas `kontrol.build-id=<IMAGE_TAG>` y `org.opencontainers.image.revision=<commit>`.
 2. **Configuración.** Copia a `/app/Kontrol` en la VM solo lo que usa el compose (`docker-compose.prod.yml`, `Caddyfile`, `backend/kontrol.sql`, `scripts/mongo-replica-health.js`) y escribe `.env` (permisos `600`) por stdin, no dentro del comando remoto.
 3. **Carga.** `docker save | gzip | ssh docker load`.
 4. **Arranque.** `docker compose up -d --no-build`: como el tag cambia, recrea `backend` y `frontend`; `postgres`, `mongo` y `caddy` solo si cambió su definición. Si faltara una imagen, falla en lugar de compilar en la VM.
 5. **Verificación.** Espera hasta 3 min a que `http://localhost:3000/api/health` responda; si no, imprime el estado de los contenedores y las últimas 120 líneas del log del backend y termina con error.
-6. **Versión desplegada** (DT-21). Comprueba que `backend` y `frontend` corren exactamente la imagen recién construida (el ID se conserva en `save`/`load`). Conserva la versión anterior de cada imagen para volver atrás y borra las demás. Avisa si el disco pasa del 85 %.
+6. **Versión desplegada** (DT-21). Comprueba que `backend` y `frontend` se crearon desde el tag de este build y que su imagen lleva su `kontrol.build-id`. No compara IDs de imagen: la VM usa el store de containerd (Docker 29), que calcula el ID distinto que el runner, y el primer despliegue (04/11/2026) falló por eso aunque corría la imagen correcta. Conserva la versión anterior de cada imagen para volver atrás y borra las demás. Avisa si el disco pasa del 85 %.
 7. **Acceso público.** Pide `FRONTEND_URL/api/health` desde fuera de la VM. Si no responde (DNS sin propagar, certificado pendiente), solo avisa.
 
 ### Después de desplegar
@@ -159,7 +159,7 @@ No hay rollback automático. Lo normal es revertir en `main` (`git revert <commi
 
 ```bash
 cd /app/Kontrol
-docker images kontrol-backend          # el segundo tag es la versión anterior
+docker images kontrol-backend          # el tag con la fecha anterior es la versión previa
 sed -i 's/^IMAGE_TAG=.*/IMAGE_TAG=<tag-anterior>/' .env
 docker compose -f docker-compose.prod.yml up -d --no-build
 ```
