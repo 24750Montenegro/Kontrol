@@ -118,7 +118,7 @@ Desde el 04/11/2026 el despliegue es **automático**: cada push a `main` (en la 
    - `VM_SSH_KEY`: la clave privada (`kontrol_deploy`, no la `.pub`).
 
    Al cambiar un valor de `.env.deploy`, actualiza también `DEPLOY_ENV`: es lo que usa el despliegue automático.
-4. **DNS y OAuth.** El registro A de `kontrol.it.com` debe apuntar a `35.202.118.162`; Caddy emite el certificado en el primer despliegue con el DNS ya propagado. `https://kontrol.it.com/api/auth/google/callback` debe estar en *Authorized redirect URIs* del cliente OAuth en Google Cloud Console.
+4. **DNS y OAuth.** El registro A de `kontrol.it.com` (`@`) debe apuntar a `35.202.118.162`, y el CNAME de `www` a `kontrol.it.com.`; Caddy emite los dos certificados en el primer despliegue con el DNS ya propagado y redirige `www` al dominio principal con un 301. `https://kontrol.it.com/api/auth/google/callback` debe estar en *Authorized redirect URIs* del cliente OAuth en Google Cloud Console.
 
 ### Desplegar a mano
 
