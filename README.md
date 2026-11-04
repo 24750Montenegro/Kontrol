@@ -263,7 +263,7 @@ El job de carga es una prueba corta de regresión (5–10 usuarios virtuales, ~3
 
 ### Despliegue continuo
 
-Cada push a `main` dispara `.github/workflows/deploy.yml`, que despliega en la VM de producción de Google Cloud (`https://kontrol.it.com`) con `scripts/deploy.sh`. Usa los secrets `DEPLOY_ENV` (contenido de `.env.deploy`) y `VM_SSH_KEY`. Requisitos y pasos en [`docs/despliegue-produccion.md`](docs/despliegue-produccion.md) §5.
+Cada push a `main` dispara `.github/workflows/deploy.yml`, que despliega en la VM de producción de Google Cloud (`https://kontrol.it.com`) con `scripts/deploy.sh`. Lee la configuración de los secrets del environment `DEPLOY_ENV`, uno por variable de `.env.deploy.example`. Requisitos y pasos en [`docs/despliegue-produccion.md`](docs/despliegue-produccion.md) §5.
 
 ---
 

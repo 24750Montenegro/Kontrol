@@ -2,10 +2,12 @@
 # deploy.sh — Despliega Kontrol en la VM de producción (Google Cloud, e2-micro).
 # Uso: ./scripts/deploy.sh
 # Lo corre .github/workflows/deploy.yml en cada push a main, y también se
-# puede correr a mano (necesita Docker local). Variables opcionales del entorno:
+# puede correr a mano (necesita Docker local). La configuración sale de
+# .env.deploy; si ese archivo no existe, de las variables de entorno con los
+# mismos nombres (así la recibe el workflow, desde los secrets). Opcionales:
 #   GIT_REF          rama a desplegar (por defecto, la rama actual)
 #   DEPLOY_ENV_FILE  archivo de configuración (por defecto, .env.deploy)
-#   DEPLOY_SSH_KEY   clave SSH; tiene prioridad sobre SSH_KEY del archivo
+#   DEPLOY_SSH_KEY   ruta de la clave SSH; tiene prioridad sobre SSH_KEY
 #
 # La VM tiene 1 GB de RAM: compilar ahí el frontend tarda demasiado. Las
 # imágenes se construyen en esta máquina a partir del commit exacto (git
@@ -22,17 +24,32 @@ COMPOSE="docker compose -f docker-compose.prod.yml"
 # Lo que el compose necesita en la VM, además de las imágenes.
 RUNTIME_FILES="docker-compose.prod.yml Caddyfile backend/kontrol.sql scripts/mongo-replica-health.js"
 
-if [ ! -f "$ENV_FILE" ]; then
-  echo "Error: no existe $ENV_FILE"
+CONFIG_VARS="VM_IP VM_USER SSH_KEY POSTGRES_PASSWORD MONGODB_URI JWT_SECRET JWT_EXPIRES_IN
+  GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_CALLBACK_URL FRONTEND_URL PUBLIC_HOST
+  CLOUDINARY_CLOUD_NAME CLOUDINARY_API_KEY CLOUDINARY_API_SECRET
+  AGENT_API_URL AGENT_API_KEY AGENT_MODEL AGENT_TEMPERATURE AGENT_MAX_TOKENS AGENT_MAX_STEPS AGENT_DISABLE_THINKING
+  STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET VITE_API_URL VITE_SOCKET_URL VITE_WEBRTC_ICE_SERVERS"
+
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  # Sin los \r de un archivo guardado en Windows, que quedarían dentro de cada valor.
+  # shellcheck disable=SC1090
+  source <(tr -d '\r' < "$ENV_FILE")
+  set +a
+elif [ -z "${VM_IP:-}" ]; then
+  echo "Error: no existe $ENV_FILE ni la configuración en variables de entorno."
   echo "Cópialo desde .env.deploy.example y rellena los valores."
   exit 1
 fi
 
-set -a
-# Sin los \r de un archivo guardado en Windows, que quedarían dentro de cada valor.
-# shellcheck disable=SC1090
-source <(tr -d '\r' < "$ENV_FILE")
-set +a
+# Un secret pegado desde Windows o con un salto de línea final arrastraría \r
+# o \n dentro del valor.
+for name in $CONFIG_VARS; do
+  value="${!name:-}"
+  value="${value//$'\r'/}"
+  while [ "${value%$'\n'}" != "$value" ]; do value="${value%$'\n'}"; done
+  printf -v "$name" '%s' "$value"
+done
 
 SSH_KEY="${DEPLOY_SSH_KEY:-${SSH_KEY:-}}"
 

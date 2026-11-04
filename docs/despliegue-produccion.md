@@ -107,17 +107,18 @@ Desde el 04/11/2026 el despliegue es **automático**: cada push a `main` (en la 
    ssh-keygen -t ed25519 -N "" -C "github-actions-deploy" -f kontrol_deploy
    ```
 
-   Ese usuario debe poder usar `docker` sin `sudo` (grupo `docker`), y el firewall de la VM debe aceptar SSH (puerto 22) desde fuera, porque los runners de GitHub no tienen IP fija. En la VM actual el usuario `kontrol` ya cumple ambas cosas y la regla `default-allow-ssh` está abierta.
+   Ese usuario debe poder usar `docker` sin `sudo` (grupo `docker`), y el firewall de la VM debe aceptar SSH (puerto 22) desde fuera, porque los runners de GitHub no tienen IP fija. En la VM actual el usuario `kontrol` ya cumple ambas cosas y la regla `default-allow-ssh` está abierta. La clave de Actions (`github-actions-deploy@kontrol`, huella `SHA256:VpRGUjgHUJyBUct1bt6dHtX5lO4xweA05u1SNTMIvGQ`) se autorizó el 04/11/2026 en `/home/kontrol/.ssh/authorized_keys` con `no-port-forwarding,no-agent-forwarding,no-X11-forwarding,no-pty`.
 2. **Configuración.** Copiar `.env.deploy.example` a `.env.deploy` (está en `.gitignore`) y llenar los valores. Pídelos a quien administra la VM por un canal privado; **nunca** por el repositorio ni por chat de grupo.
    - `VM_USER`: el usuario de la VM al que se le autorizó la clave.
    - `POSTGRES_PASSWORD`: la misma con la que se creó el volumen de Postgres de la VM; Postgres solo la lee al crear el volumen.
    - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`: en la consola de Cloudinary, *Settings → API Keys*. El *cloud name* aparece arriba de esa página (también en el *Dashboard*); no es el nombre de la clave. Sin ellas no se pueden subir adjuntos ni evidencias.
    - `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET`: en Google Cloud Console, *APIs & Services → Credentials*, en el cliente *OAuth 2.0 Client IDs* de tipo *Web application*. Opcionales: sin ellas el inicio de sesión con Google queda deshabilitado.
-3. **Secrets del repositorio** (*Settings → Secrets and variables → Actions*):
-   - `DEPLOY_ENV`: el contenido completo de `.env.deploy`.
-   - `VM_SSH_KEY`: la clave privada (`kontrol_deploy`, no la `.pub`).
+3. **Secrets del environment `DEPLOY_ENV`** (*Settings → Environments → DEPLOY_ENV → Add environment secret*): uno por variable de `.env.deploy.example`, con el mismo nombre. Allí `SSH_KEY` es el **contenido** de la clave privada (`kontrol_deploy`, no la `.pub`), no una ruta.
+   - Obligatorios: `VM_IP`, `VM_USER`, `SSH_KEY`, `POSTGRES_PASSWORD`, `JWT_SECRET`, `FRONTEND_URL`.
+   - Recomendados: `PUBLIC_HOST`, `JWT_EXPIRES_IN`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`.
+   - Opcionales: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_CALLBACK_URL`, `MONGODB_URI`, `AGENT_*`, `STRIPE_*`, `VITE_*`. Un secret que no existe llega vacío.
 
-   Al cambiar un valor de `.env.deploy`, actualiza también `DEPLOY_ENV`: es lo que usa el despliegue automático.
+   El despliegue automático solo lee estos secrets; `.env.deploy` es para desplegar a mano. Al cambiar un valor, cámbialo en los dos.
 4. **DNS y OAuth.** El registro A de `kontrol.it.com` (`@`) debe apuntar a `35.202.118.162`, y el CNAME de `www` a `kontrol.it.com.`; Caddy emite los dos certificados en el primer despliegue con el DNS ya propagado y redirige `www` al dominio principal con un 301. `https://kontrol.it.com/api/auth/google/callback` debe estar en *Authorized redirect URIs* del cliente OAuth en Google Cloud Console.
 
 ### Desplegar a mano
