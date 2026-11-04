@@ -1,0 +1,61 @@
+name: Deploy
+
+# Cada push a main (en la práctica, el merge de un PR que ya pasó CI) se
+# despliega en la VM de producción de Google Cloud. workflow_dispatch permite
+# volver a desplegar a mano el último main desde la pestaña Actions.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Un despliegue a la vez, y el que está en curso nunca se cancela: cortarlo a
+# la mitad puede dejar contenedores a medio recrear. Si llegan dos pushes
+# seguidos, el segundo espera y luego despliega su propio commit.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Producción - VM de Google Cloud
+    runs-on: ubuntu-latest
+    # Las imágenes se construyen aquí, en el runner, y se cargan en la VM:
+    # la e2-micro de producción no tiene RAM para compilar el frontend.
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: https://kontrol.it.com
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      # DEPLOY_ENV es el contenido completo de .env.deploy (ver
+      # .env.deploy.example) y VM_SSH_KEY la clave privada cuya pública está
+      # autorizada en la VM. Se quitan los \r por si se pegaron desde Windows.
+      - name: Preparar configuración y clave SSH
+        env:
+          DEPLOY_ENV: ${{ secrets.DEPLOY_ENV }}
+          VM_SSH_KEY: ${{ secrets.VM_SSH_KEY }}
+        run: |
+          if [ -z "$DEPLOY_ENV" ] || [ -z "$VM_SSH_KEY" ]; then
+            echo "::error::Faltan los secrets DEPLOY_ENV o VM_SSH_KEY. Ver docs/despliegue-produccion.md §5."
+            exit 1
+          fi
+          umask 077
+          printf '%s\n' "$DEPLOY_ENV" | tr -d '\r' > "$RUNNER_TEMP/.env.deploy"
+          printf '%s\n' "$VM_SSH_KEY" | tr -d '\r' > "$RUNNER_TEMP/deploy_key"
+
+      - name: Desplegar en la VM
+        env:
+          DEPLOY_ENV_FILE: ${{ runner.temp }}/.env.deploy
+          DEPLOY_SSH_KEY: ${{ runner.temp }}/deploy_key
+          GIT_REF: main
+        run: ./scripts/deploy.sh
+
+      - name: Borrar configuración y clave del runner
+        if: always()
+        run: rm -f "$RUNNER_TEMP/.env.deploy" "$RUNNER_TEMP/deploy_key"

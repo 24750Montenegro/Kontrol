@@ -261,6 +261,10 @@ Los reportes de cobertura (`coverage-backend`, `coverage-frontend`) y el resumen
 
 El job de carga es una prueba corta de regresión (5–10 usuarios virtuales, ~3.5 min), no una medición de capacidad. La batería completa contra el ambiente de pruebas de la VM está en `.github/workflows/load-test.yml`, se lanza a mano y sus resultados están en `docs/pruebas-carga-estres.md`. Detalles en [`k6/README.md`](k6/README.md).
 
+### Despliegue continuo
+
+Cada push a `main` dispara `.github/workflows/deploy.yml`, que despliega en la VM de producción de Google Cloud (`https://kontrol.it.com`) con `scripts/deploy.sh`. Usa los secrets `DEPLOY_ENV` (contenido de `.env.deploy`) y `VM_SSH_KEY`. Requisitos y pasos en [`docs/despliegue-produccion.md`](docs/despliegue-produccion.md) §5.
+
 ---
 
 ## Cobertura de código
